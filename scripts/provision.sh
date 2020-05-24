@@ -18,11 +18,11 @@ apt-get install -y git
 #MySQL-Database - percona flavor
 printf $ECHOWRAPPER "Installing Percona Mysql"
 export DEBIAN_FRONTEND=noninteractive
-wget https://repo.percona.com/apt/percona-release_0.1-3.$(lsb_release -sc)_all.deb
-dpkg -i percona-release_0.1-3.$(lsb_release -sc)_all.deb
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8507EFA5
+wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
 apt-get update
-apt-get install -y percona-server-server
+apt-get install -y percona-server-server-5.7
+mysql -e "update user SET plugin='mysql_native_password';" mysql
 
 #Nginx - But a current version please
 printf $ECHOWRAPPER "Installing NGINX"
@@ -44,24 +44,75 @@ usermod -a -G www-data vagrant
 
 #PHP
 printf $ECHOWRAPPER "Installing PHP"
-apt-get install -y php-fpm php-cli php-mysql php-imagick php-gd php-xdebug php-pear php-dev php-mcrypt php-curl php-pdo
+add-apt-repository ppa:ondrej/php -y
+apt-get install -y php-imagick php-xdebug php-pear \
+php7.1 php7.1-fpm php7.1-cli php7.1-mysql php7.1-gd php7.1-dev php7.1-curl php7.1-common php7.1-mbstring php7.1-zip php7.1-bz2 \
+php7.2 php7.2-fpm php7.2-cli php7.2-mysql php7.2-gd php7.2-dev php7.2-curl php7.2-common php7.2-mbstring php7.2-zip php7.2-bz2 \
+php7.3 php7.3-fpm php7.3-cli php7.3-mysql php7.3-gd php7.3-dev php7.3-curl php7.3-common php7.3-mbstring php7.3-zip php7.3-bz2 \
+php7.4 php7.4-fpm php7.4-cli php7.4-mysql php7.4-gd php7.4-dev php7.4-curl php7.4-common php7.4-mbstring php7.4-zip php7.4-bz2
+
+
 
 # PHP konfigurieren
 printf $ECHOWRAPPER "Configuring PHP"
 cd ~
 wget https://github.com/frickelbruder/php-ini-setter/releases/download/1.1.2/php-ini-setter.phar
 chmod a+x php-ini-setter.phar
-./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.0/apache2/php.ini
-./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.0/apache2/php.ini
-./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.0/apache2/php.ini
-./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.0/apache2/php.ini
-./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.0/apache2/php.ini
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.1/fpm/php.ini
+./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.1/fpm/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.1/fpm/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.1/fpm/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.1/fpm/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.1/fpm/php.ini
 
-./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.0/cli/php.ini
-./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.0/cli/php.ini
-./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.0/cli/php.ini
-./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.0/cli/php.ini
-./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.0/cli/php.ini
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.1/cli/php.ini
+./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.1/cli/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.1/cli/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.1/cli/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.1/cli/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.1/cli/php.ini
+
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.2/fpm/php.ini
+./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.2/fpm/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.2/fpm/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.2/fpm/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.2/fpm/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.2/fpm/php.ini
+
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.2/cli/php.ini
+./php-ini-setter.phar --name memory_limit --value -1 --file /etc/php/7.2/cli/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.2/cli/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.2/cli/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.2/cli/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.2/cli/php.ini
+
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.3/fpm/php.ini
+./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.3/fpm/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.3/fpm/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.3/fpm/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.3/fpm/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.3/fpm/php.ini
+
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.3/cli/php.ini
+./php-ini-setter.phar --name memory_limit --value -1 --file /etc/php/7.3/cli/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.3/cli/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.3/cli/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.3/cli/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.3/cli/php.ini
+
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.4/fpm/php.ini
+./php-ini-setter.phar --name memory_limit --value 512M --file /etc/php/7.4/fpm/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.4/fpm/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.4/fpm/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.4/fpm/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.4/fpm/php.ini
+
+./php-ini-setter.phar --name short_open_tag --value On --file /etc/php/7.4/cli/php.ini
+./php-ini-setter.phar --name memory_limit --value -1 --file /etc/php/7.4/cli/php.ini
+./php-ini-setter.phar --name log_errors --value On --file /etc/php/7.4/cli/php.ini
+./php-ini-setter.phar --name error_log --value /var/log/php_errors.log --file /etc/php/7.4/cli/php.ini
+./php-ini-setter.phar --name max_execution_time --value 120 --file /etc/php/7.4/cli/php.ini
+./php-ini-setter.phar --name date.timezone --value "Europe/Berlin" --file /etc/php/7.4/cli/php.ini
 
 touch /var/log/php_errors.log
 chmod a+r /var/log/php_errors.log
@@ -82,7 +133,6 @@ php composer-setup.php
 php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer.phar
 ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
-php5dismod -s cli xdebug
 
 ###PHPAB
 printf $ECHOWRAPPER "Installing phpab"
@@ -94,17 +144,8 @@ ln -s /usr/local/bin/phpab.phar /usr/local/bin/phpab
 #phpmyadmin
 printf $ECHOWRAPPER "Installing PHPMyAdmin"
 printf $ECHOWRAPPER "Setting PHPMyAdmin debconf settings"
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-install boolean false '
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-reinstall boolean false '
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect '
-debconf-set-selections <<< 'phpmyadmin phpmyadmin/internal/skip-preseed boolean true '
-printf $ECHOWRAPPER "Doing the install"
-sudo apt-get --no-install-recommends install -y phpmyadmin
-sed -i 's~ //\(.*AllowNoPassword.*\)~\1~g' /etc/phpmyadmin/config.inc.php
-sed -i "s~'cookie';~'config';~1" /etc/phpmyadmin/config.inc.php
-sed -i "s~= \$dbuser;~= 'root';~1" /etc/phpmyadmin/config.inc.php
-sed -i "s~= \$dbpass;~= '';~1" /etc/phpmyadmin/config.inc.php
-sed -i "s~= \$dbserver;~= '127.0.0.1';~1" /etc/phpmyadmin/config.inc.php
+cd /var/www
+composer create-project phpmyadmin/phpmyadmin
 
 #Ruby (required for compass)
 printf $ECHOWRAPPER "Installing Ruby"
@@ -126,7 +167,7 @@ gem install compass
 #NodeJS/NPM
 printf $ECHOWRAPPER "Installing Node/NPM"
 curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-apt-get install -y nodejs
+apt-get install -y nodejs npm
 
 #Bower
 printf $ECHOWRAPPER "Installing Bower"

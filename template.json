@@ -25,41 +25,68 @@
         {
             "type": "shell",
             "inline": [
-                "sudo chmod a+w /etc/nginx/conf.d/default.conf",
-                "sudo chmod a+w /etc/nginx/modules/",
-                "sudo chmod a+w /etc/php/7.0/mods-available/xdebug.ini",
-                "sudo chmod a+w /etc/php/7.0/mods-available" ,
-                "sudo chmod a+w /etc/phpmyadmin/conf.d"
+                "sudo chmod a+w /etc/nginx/sites-available/default.conf",
+                "sudo chmod a+w /etc/nginx/",
+                "sudo chmod a+w /var/www/phpmyadmin",
+                "sudo chmod a+w /etc/php/7.1/mods-available",
+                "sudo chmod a+w /etc/php/7.1/mods-available/xdebug.ini",
+                "sudo chmod a+w /etc/php/7.2/mods-available",
+                "sudo chmod a+w /etc/php/7.2/mods-available/xdebug.ini",
+                "sudo chmod a+w /etc/php/7.3/mods-available",
+                "sudo chmod a+w /etc/php/7.3/mods-available/xdebug.ini",
+                "sudo chmod a+w /etc/php/7.4/mods-available",
+                "sudo chmod a+w /etc/php/7.4/mods-available/xdebug.ini"
              ]
         },
         {
           "type": "file",
           "source": "files/default.conf",
-          "destination": "/etc/nginx/conf.d/default.conf"
+          "destination": "/etc/nginx/sites-available/default.conf"
         },
         {
           "type": "file",
           "source": "files/phpmyadmin.conf",
-          "destination": "/etc/nginx/modules/phpmyadmin.conf"
+          "destination": "/etc/nginx/phpmyadmin.conf"
         },
         {
           "type": "file",
           "source": "files/xdebug.ini",
-          "destination": "/etc/php/7.0/mods-available/xdebug.ini"
+          "destination": "/etc/php/7.1/mods-available/xdebug.ini"
+        },
+        {
+            "type": "file",
+            "source": "files/xdebug.ini",
+            "destination": "/etc/php/7.2/mods-available/xdebug.ini"
+        },
+        {
+            "type": "file",
+            "source": "files/xdebug.ini",
+            "destination": "/etc/php/7.3/mods-available/xdebug.ini"
+        },
+        {
+            "type": "file",
+            "source": "files/xdebug.ini",
+            "destination": "/etc/php/7.4/mods-available/xdebug.ini"
         },
         {
           "type": "file",
-          "source": "files/everlasting_cookie.php",
-          "destination": "/etc/phpmyadmin/conf.d/everlasting_cookie.php"
+          "source": "files/phpmyadmin_config.inc.php",
+          "destination": "/var/www/phpmyadmin/config.inc.php"
         },
         {
             "type": "shell",
             "inline": [
-                "sudo chmod a-w /etc/nginx/conf.d/default.conf",
-                "sudo chmod a-w /etc/nginx/modules",
-                 "sudo chmod a-w /etc/php/7.0/mods-available",
-                 "sudo chmod a-w /etc/phpmyadmin/conf.d",
-                "sudo chmod a-w /etc/php/7.0/mods-available/xdebug.ini"
+                "sudo chmod a-w /etc/nginx/sites-available/default.conf",
+                "sudo chmod a-w /etc/nginx/",
+                 "sudo chmod a-w /var/www/phpmyadmin",
+                "sudo chmod a-w /etc/php/7.1/mods-available",
+                "sudo chmod a-w /etc/php/7.1/mods-available/xdebug.ini",
+                "sudo chmod a-w /etc/php/7.2/mods-available",
+                "sudo chmod a-w /etc/php/7.2/mods-available/xdebug.ini",
+                "sudo chmod a-w /etc/php/7.3/mods-available",
+                "sudo chmod a-w /etc/php/7.3/mods-available/xdebug.ini",
+                "sudo chmod a-w /etc/php/7.4/mods-available",
+                "sudo chmod a-w /etc/php/7.4/mods-available/xdebug.ini"
              ]
         }
     ],
