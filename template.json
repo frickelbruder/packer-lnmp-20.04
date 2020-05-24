@@ -1,0 +1,135 @@
+{
+    "variables": {
+        "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}",
+        "cloud_repo": "frickelbruder/lnmp-stack-20.04",
+        "version": "0.0.1",
+        "version_description": "base"
+    } ,
+    "provisioners": [
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/base.sh",
+                "scripts/virtualbox.sh",
+                "scripts/vagrant.sh",
+                "scripts/provision.sh",
+                "scripts/cleanup.sh",
+                "scripts/zerodisk.sh"
+            ],
+            "override": {
+                "virtualbox-iso": {
+                    "execute_command": "echo 'vagrant'|sudo -S bash '{{.Path}}'"
+                }
+            }
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo chmod a+w /etc/nginx/conf.d/default.conf",
+                "sudo chmod a+w /etc/nginx/modules/",
+                "sudo chmod a+w /etc/php/7.0/mods-available/xdebug.ini",
+                "sudo chmod a+w /etc/php/7.0/mods-available" ,
+                "sudo chmod a+w /etc/phpmyadmin/conf.d"
+             ]
+        },
+        {
+          "type": "file",
+          "source": "files/default.conf",
+          "destination": "/etc/nginx/conf.d/default.conf"
+        },
+        {
+          "type": "file",
+          "source": "files/phpmyadmin.conf",
+          "destination": "/etc/nginx/modules/phpmyadmin.conf"
+        },
+        {
+          "type": "file",
+          "source": "files/xdebug.ini",
+          "destination": "/etc/php/7.0/mods-available/xdebug.ini"
+        },
+        {
+          "type": "file",
+          "source": "files/everlasting_cookie.php",
+          "destination": "/etc/phpmyadmin/conf.d/everlasting_cookie.php"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo chmod a-w /etc/nginx/conf.d/default.conf",
+                "sudo chmod a-w /etc/nginx/modules",
+                 "sudo chmod a-w /etc/php/7.0/mods-available",
+                 "sudo chmod a-w /etc/phpmyadmin/conf.d",
+                "sudo chmod a-w /etc/php/7.0/mods-available/xdebug.ini"
+             ]
+        }
+    ],
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "boot_command": [
+                "<esc><wait>",
+                "<esc><wait>",
+                "<enter><wait>",
+                "/install/vmlinuz",
+                " auto=true",
+                " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+                " locale=de_DE<wait>",
+                " console-setup/ask_detect=false<wait>",
+                " console-setup/layoutcode=de<wait>",
+                " console-setup/modelcode=nodeadkeys<wait>",
+                " debconf/frontend=noninteractive<wait>",
+                " debian-installer=de_DE<wait>",
+                " fb=false<wait>",
+                " initrd=/install/initrd.gz<wait>",
+                " kbd-chooser/method=de<wait>",
+                " keyboard-configuration/layout=de<wait>",
+                " keyboard-configuration/variant=nodeadkeys<wait>",
+                " netcfg/get_domain=vm<wait>",
+                " netcfg/get_hostname=vagrant<wait>",
+                " grub-installer/bootdev=/dev/sda<wait>",
+                " noapic<wait>",
+                " -- <wait>",
+                "<enter><wait>"
+            ],
+            "vboxmanage": [
+              ["modifyvm", "{{.Name}}", "--vram", "32"],
+              ["modifyvm", "{{.Name}}", "--memory", 2048],
+              ["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"]
+            ],
+            "headless": true,
+            "output_directory": "vm",
+            "boot_wait": "10s",
+            "disk_size": 20480,
+            "guest_os_type": "Ubuntu_64",
+            "http_directory": "http",
+            "iso_checksum": "36f15879bd9dfd061cd588620a164a82972663fdd148cce1f70d57d314c21b73",
+            "iso_checksum_type": "sha256",
+            "iso_url": "http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04-legacy-server-amd64.iso",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S bash 'shutdown.sh'",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version"
+        }
+    ],
+    "post-processors": [
+      [
+          {
+              "type": "vagrant",
+              "compression_level": 9,
+              "output": "vagrant/{{.Provider}}.box",
+              "keep_input_artifact": true
+          },
+          {
+              "type": "vagrant-cloud",
+			  "box_tag": "{{user `cloud_repo`}}",
+              "access_token": "{{user `cloud_token`}}",
+              "version": "{{user `version`}}",
+			  "version_description":  "{{user `version_description`}}"
+
+          }
+      ]
+    ]
+}
