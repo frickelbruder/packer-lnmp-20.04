@@ -2,8 +2,8 @@
     "variables": {
         "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}",
         "cloud_repo": "frickelbruder/lnmp-stack-20.04",
-        "version": "0.0.1",
-        "version_description": "base"
+        "version": "0.0.2",
+        "version_description": "more base"
     } ,
     "provisioners": [
         {
@@ -25,48 +25,20 @@
         {
             "type": "shell",
             "inline": [
-                "sudo chmod a+w /etc/nginx/sites-available/default.conf",
+                "sudo chmod a+w /etc/nginx/sites-available/default",
                 "sudo chmod a+w /etc/nginx/",
-                "sudo chmod a+w /var/www/phpmyadmin",
-                "sudo chmod a+w /etc/php/7.1/mods-available",
-                "sudo chmod a+w /etc/php/7.1/mods-available/xdebug.ini",
-                "sudo chmod a+w /etc/php/7.2/mods-available",
-                "sudo chmod a+w /etc/php/7.2/mods-available/xdebug.ini",
-                "sudo chmod a+w /etc/php/7.3/mods-available",
-                "sudo chmod a+w /etc/php/7.3/mods-available/xdebug.ini",
-                "sudo chmod a+w /etc/php/7.4/mods-available",
-                "sudo chmod a+w /etc/php/7.4/mods-available/xdebug.ini"
+                "sudo chmod a+w /var/www/phpmyadmin"
              ]
         },
         {
           "type": "file",
           "source": "files/default.conf",
-          "destination": "/etc/nginx/sites-available/default.conf"
+          "destination": "/etc/nginx/sites-available/default"
         },
         {
           "type": "file",
           "source": "files/phpmyadmin.conf",
           "destination": "/etc/nginx/phpmyadmin.conf"
-        },
-        {
-          "type": "file",
-          "source": "files/xdebug.ini",
-          "destination": "/etc/php/7.1/mods-available/xdebug.ini"
-        },
-        {
-            "type": "file",
-            "source": "files/xdebug.ini",
-            "destination": "/etc/php/7.2/mods-available/xdebug.ini"
-        },
-        {
-            "type": "file",
-            "source": "files/xdebug.ini",
-            "destination": "/etc/php/7.3/mods-available/xdebug.ini"
-        },
-        {
-            "type": "file",
-            "source": "files/xdebug.ini",
-            "destination": "/etc/php/7.4/mods-available/xdebug.ini"
         },
         {
           "type": "file",
@@ -76,17 +48,9 @@
         {
             "type": "shell",
             "inline": [
-                "sudo chmod a-w /etc/nginx/sites-available/default.conf",
+                "sudo chmod a-w /etc/nginx/sites-available/default",
                 "sudo chmod a-w /etc/nginx/",
-                 "sudo chmod a-w /var/www/phpmyadmin",
-                "sudo chmod a-w /etc/php/7.1/mods-available",
-                "sudo chmod a-w /etc/php/7.1/mods-available/xdebug.ini",
-                "sudo chmod a-w /etc/php/7.2/mods-available",
-                "sudo chmod a-w /etc/php/7.2/mods-available/xdebug.ini",
-                "sudo chmod a-w /etc/php/7.3/mods-available",
-                "sudo chmod a-w /etc/php/7.3/mods-available/xdebug.ini",
-                "sudo chmod a-w /etc/php/7.4/mods-available",
-                "sudo chmod a-w /etc/php/7.4/mods-available/xdebug.ini"
+                 "sudo chmod a-w /var/www/phpmyadmin"
              ]
         }
     ],
@@ -155,7 +119,6 @@
               "access_token": "{{user `cloud_token`}}",
               "version": "{{user `version`}}",
 			  "version_description":  "{{user `version_description`}}"
-
           }
       ]
     ]
